@@ -21,7 +21,8 @@ export default async function handler(req, res) {
 
     const rawBody = Buffer.concat(buffers).toString();
     if (!rawBody || rawBody.trim() === '') {
-      throw new Error('Empty request body');
+      console.error('Empty request body');
+      return res.status(400).send('Empty request body');
     }
 
     console.log('Raw body:', rawBody);
