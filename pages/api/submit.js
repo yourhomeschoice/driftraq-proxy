@@ -1,10 +1,16 @@
+export const config = {
+  api: {
+    bodyParser: true,
+  },
+};
+
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const sheetdbUrl = 'https://sheetdb.io/api/v1/YOUR_SHEETDB_ID'; // Replace with your actual SheetDB ID
 
-      const wrapped = { data: [req.body] }; // ✅ Wrap payload for SheetDB
-      console.log('Wrapped payload:', wrapped); // Optional: log for debugging
+      const wrapped = { data: [req.body] };
+      console.log('Wrapped payload:', wrapped); // ✅ Log for debugging
 
       const response = await fetch(sheetdbUrl, {
         method: 'POST',
