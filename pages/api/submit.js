@@ -3,12 +3,13 @@ export default async function handler(req, res) {
     try {
       const sheetdbUrl = 'https://sheetdb.io/api/v1/YOUR_SHEETDB_ID'; // Replace with your actual SheetDB ID
 
-      console.log('Incoming body:', req.body); // ✅ Log incoming payload
+      const wrapped = { data: [req.body] };
+      console.log('Wrapped payload:', wrapped); // ✅ Log wrapped payload
 
       const response = await fetch(sheetdbUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(req.body)
+        body: JSON.stringify(wrapped)
       });
 
       const result = await response.json();
