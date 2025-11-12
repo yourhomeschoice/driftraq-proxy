@@ -9,6 +9,10 @@ export default async function handler(req, res) {
     return res.status(200).send('Submit endpoint is live');
   }
 
+  if (req.method !== 'POST') {
+    return res.status(405).send('Method Not Allowed');
+  }
+
   try {
     const buffers = [];
     for await (const chunk of req) {
@@ -16,7 +20,9 @@ export default async function handler(req, res) {
     }
 
     const rawBody = Buffer.concat(buffers).toString();
-    if (!rawBody) throw new Error('Empty request body');
+    if (!rawBody || rawBody.trim() === '') {
+      throw new Error('Empty request body');
+    }
 
     console.log('Raw body:', rawBody);
     const data = JSON.parse(rawBody);
