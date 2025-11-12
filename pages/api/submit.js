@@ -1,42 +1,23 @@
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'POST') {
+    try {
+      const sheetdbUrl = 'https://sheetdb.io/api/v1/YOUR_SHEETDB_ID'; // Replace with your actual SheetDB ID
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method === 'GET') return res.status(200).send('Submit endpoint is live');
-  if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+      console.log('Incoming body:', req.body); // ✅ Log incoming payload
 
-  try {
-    const data = req.body;
-    console.log('Parsed data:', data);
+      const response = await fetch(sheetdbUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(req.body)
+      });
 
-    const payload = {
-      "Task Name": data.taskName || "",
-      "Category": data.category || "",
-      "Goal Type": data.goalType || "",
-      "Energy Level": data.energyLevel || "",
-      "Notes": data.notes || "",
-      "Date": data.date || "",
-      "Completed?": "FALSE",
-      "Created At": new Date().toISOString(),
-      "Email Entry": data.emailEntry || ""
-    };
-
-    console.log('Payload to SheetDB:', payload);
-
-    const response = await fetch('https://sheetdb.io/api/v1/fsuchnwq0m08i', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data: payload })
-    });
-
-    const result = await response.json();
-    console.log('SheetDB response:', result);
-
-    res.status(200).json(result);
-  } catch (err) {
-    console.error('Proxy error:', err.message);
-    res.status(500).send('Proxy failed');
+      const result = await response.json();
+      res.status(200).json(result);
+    } catch (error) {
+      console.error('Proxy error:', error);
+      res.status(500).json({ error: 'Proxy failed' });
+    }
+  } else {
+    res.status(405).json({ error: 'Method not allowed' });
   }
 }
