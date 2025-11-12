@@ -4,29 +4,11 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
-
-  if (req.method === 'GET') {
-    return res.status(200).send('Submit endpoint is live');
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).send('Method Not Allowed');
-  }
+  if (req.method === 'GET') return res.status(200).send('Submit endpoint is live');
+  if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
   try {
-    const buffers = [];
-    for await (const chunk of req) {
-      buffers.push(chunk);
-    }
-
-    const rawBody = Buffer.concat(buffers).toString();
-    if (!rawBody || rawBody.trim() === '') {
-      console.error('Empty request body');
-      return res.status(400).send('Empty request body');
-    }
-
-    console.log('Raw body:', rawBody);
-    const data = JSON.parse(rawBody);
+    const data = req.body;
     console.log('Parsed data:', data);
 
     const payload = {
@@ -45,9 +27,7 @@ export default async function handler(req, res) {
 
     const response = await fetch('https://sheetdb.io/api/v1/fsuchnwq0m08i', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ data: payload })
     });
 
