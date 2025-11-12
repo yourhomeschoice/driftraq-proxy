@@ -6,6 +6,8 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
+    console.log('Incoming data:', req.body); // 🔍 Step 6: log the incoming payload
+
     const response = await fetch('https://script.google.com/macros/s/AKfycbypdNfj2awbOd_7X4dRre_fQGwkTDp0y-fmkXMjowYSsMm9-tMapG8IH_UcRVP/exec', {
       method: 'POST',
       headers: {
