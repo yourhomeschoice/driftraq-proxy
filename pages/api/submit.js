@@ -9,8 +9,10 @@ export default async function handler(req, res) {
     try {
       const sheetdbUrl = 'https://sheetdb.io/api/v1/YOUR_SHEETDB_ID'; // Replace with your actual SheetDB ID
 
+      console.log('Incoming body:', req.body);
+
       const wrapped = { data: [req.body] };
-      console.log('Wrapped payload:', wrapped); // ✅ Log for debugging
+      console.log('Wrapped payload:', wrapped);
 
       const response = await fetch(sheetdbUrl, {
         method: 'POST',
@@ -19,7 +21,12 @@ export default async function handler(req, res) {
       });
 
       const result = await response.json();
-      res.status(200).json(result);
+      console.log('SheetDB response:', result);
+
+      res.status(200).json({
+        echo: wrapped,
+        sheetdb: result
+      });
     } catch (error) {
       console.error('Proxy error:', error);
       res.status(500).json({ error: 'Proxy failed' });
