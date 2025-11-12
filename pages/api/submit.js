@@ -15,7 +15,10 @@ export default async function handler(req, res) {
       buffers.push(chunk);
     }
     const rawBody = Buffer.concat(buffers).toString();
+    console.log('Raw body:', rawBody); // ✅ Logging raw body
+
     const data = JSON.parse(rawBody);
+    console.log('Parsed data:', data); // ✅ Logging parsed JSON
 
     const payload = {
       "Task Name": data.taskName || "",
@@ -29,6 +32,8 @@ export default async function handler(req, res) {
       "Email Entry": data.emailEntry || ""
     };
 
+    console.log('Payload to SheetDB:', payload); // ✅ Logging final payload
+
     const response = await fetch('https://sheetdb.io/api/v1/fsuchnwq0m08i', {
       method: 'POST',
       headers: {
@@ -38,9 +43,11 @@ export default async function handler(req, res) {
     });
 
     const result = await response.json();
+    console.log('SheetDB response:', result); // ✅ Logging SheetDB response
+
     res.status(200).json(result);
   } catch (err) {
-    console.error('Proxy error:', err);
+    console.error('Proxy error:', err); // ✅ Logging error
     res.status(500).send('Proxy failed');
   }
-}  
+}
