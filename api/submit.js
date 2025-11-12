@@ -13,18 +13,28 @@ export default async function handler(req, res) {
     const rawBody = Buffer.concat(buffers).toString();
     const data = JSON.parse(rawBody);
 
-    console.log('Incoming data:', data);
+    const payload = {
+      "Task Name": data.taskName || "",
+      "Category": data.category || "",
+      "Goal Type": data.goalType || "",
+      "Energy Level": data.energyLevel || "",
+      "Notes": data.notes || "",
+      "Date": data.date || "",
+      "Completed?": "FALSE",
+      "Created At": new Date().toISOString(),
+      "Email Entry": data.emailEntry || ""
+    };
 
-    const response = await fetch('https://script.google.com/macros/s/AKfycbypdNfj2awbOd_7X4dRre_fQGwkTDp0y-fmkXMjowYSsMm9-tMapG8IH_UcRVP3Ksbl/exec', {
+    const response = await fetch('https://sheetdb.io/api/v1/fsuchnwq0m08i', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       },
-      body: new URLSearchParams(data).toString()
+      body: JSON.stringify({ data: payload })
     });
 
-    const text = await response.text();
-    res.status(200).send(text);
+    const result = await response.json();
+    res.status(200).json(result);
   } catch (err) {
     console.error('Proxy error:', err);
     res.status(500).send('Proxy failed');
