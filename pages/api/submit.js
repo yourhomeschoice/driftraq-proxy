@@ -7,7 +7,7 @@ export const config = {
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
-      const sheetdbUrl = 'https://sheetdb.io/api/v1/YOUR_SHEETDB_ID'; // Replace with your actual SheetDB ID
+      const sheetdbUrl = 'https://sheetdb.io/api/v1/fsuchnwq0m08i'; // Replace with your actual SheetDB ID
 
       const wrapped = { data: [req.body] };
       console.log('Incoming body:', req.body);
