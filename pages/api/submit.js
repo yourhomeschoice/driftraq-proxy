@@ -4,17 +4,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Encode the payload as URL-encoded form data
-    const encodedData = Object.keys(req.body)
-      .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(req.body[key]))
-      .join('&');
+    const payload = {
+      mood: req.body.mood || "",
+      feedbackNotes: req.body.feedbackNotes || "",
+      feedbackEmail: req.body.feedbackEmail || "",
+      formType: "feedback"
+    };
 
     const response = await fetch("https://script.google.com/macros/s/AKfycbypdNfj2awbOd_7X4dRre_fQGwkTDp0y-fmkXMjowYSsMm9-tMapG8IH_UcRVP3Ksbl/exec", {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/json"
       },
-      body: encodedData
+      body: JSON.stringify(payload)
     });
 
     const text = await response.text();
